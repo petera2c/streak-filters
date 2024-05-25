@@ -1,5 +1,5 @@
 const FilterBuilder = () => {
-  return <div>FilterBuilder</div>;
+  return <div></div>;
 };
 
 export default FilterBuilder;
