@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# Filter Builder Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This application is a Filter Builder designed for tables, utilizing React and TypeScript. It provides a dynamic way to create and apply filters to data tables, enhancing user interaction and data handling capabilities.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Dynamic Filter Creation**: Users can build filters based on various criteria and data types including numbers, text, dates, booleans, and enums.
+- **Multiple Operator Support**: Supports a wide range of operators such as 'Equal to', 'Not equal to', 'Contains', 'Greater than', etc., tailored to the data type.
+- **React and TypeScript Integration**: Leverages the power of React for the UI and TypeScript for type safety and scalability.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Components
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- `FilterBuilder`: The main component that allows users to construct filters.
+- `Filter`: A component that displays the filters applied and allows for their manipulation.
 
-### `npm test`
+## Operators
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Operators are divided based on the data type they support:
 
-### `npm run build`
+- **Text Operators**: Equal to, Not equal to, Contains, Does not contain, Starts with, Ends with.
+- **Numeric Operators**: Equal to, Not equal to, Greater than, Less than, Greater than or equal to, Less than or equal to.
+- **Date Operators**: Equal to, Not equal to, Before, After, Between, Not between.
+- **Boolean Operators**: Is true, Is false.
+- **Enum Operators**: Equal to, Not equal to.
+- **List Operators**: Contains, Does not contain.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To set up the Filter Builder in your project, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Clone the repository.
+2. Install the necessary dependencies via `npm install`.
+3. `npm start` to run the application.
