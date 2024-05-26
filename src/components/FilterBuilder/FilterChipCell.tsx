@@ -9,7 +9,7 @@ const FilterChipCell = ({
   onClick,
 }: {
   children: ReactNode;
-  isHighlighted: boolean;
+  isHighlighted?: boolean;
   onClick: () => void;
 }) => {
   const listenerStack = useRecoilValue(keyboardListenerStackState);
@@ -39,9 +39,12 @@ const FilterChipCell = ({
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [isHighlighted, listenerStack, handleClick]);
+
   return (
     <div
-      className={`p-1 ${isHighlighted ? "bg-slate-200" : ""}`}
+      className={`p-1 border-2 border-solid rounded ${
+        isHighlighted ? "border-blue-300" : "border-transparent"
+      }`}
       onClick={handleClick}
     >
       {children}

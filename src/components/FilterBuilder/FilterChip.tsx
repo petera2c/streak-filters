@@ -6,6 +6,7 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 import TableFilterValue from "../../types/TableFilterValue";
 import FilterEditingStage from "../../types/FilterEditingStage";
 import FilterChipCell from "./FilterChipCell";
+import { FILTER_ITEMS_PER_CHIP } from "./FilterBuilder";
 
 const FilterChip = ({
   highlightedIndex,
@@ -32,18 +33,19 @@ const FilterChip = ({
   const isFilterChipHighlighted =
     highlightedIndex !== undefined &&
     index !== undefined &&
-    highlightedIndex >= index * 4 &&
-    highlightedIndex < (index + 1) * 4;
-
+    highlightedIndex >= index * FILTER_ITEMS_PER_CHIP &&
+    highlightedIndex < (index + 1) * FILTER_ITEMS_PER_CHIP;
   const highlightedStageIndex = isFilterChipHighlighted
-    ? highlightedIndex % 4
+    ? highlightedIndex % FILTER_ITEMS_PER_CHIP
     : undefined;
+  const canEditColumn = !Boolean(selectedOperator);
 
   return (
     <div className="flex items-center border border-solid border-slate-300 rounded cursor-pointer">
       <FilterChipCell
-        isHighlighted={highlightedStageIndex === 0}
-        onClick={() => handleFilterChipClick("column")}
+        onClick={() => {
+          if (canEditColumn) handleFilterChipClick("column");
+        }}
       >
         {selectedColumn ? selectedColumn.label : "Filter"}
       </FilterChipCell>
@@ -51,7 +53,7 @@ const FilterChip = ({
         <>
           <Divider className="m-1" direction="vertical" />
           <FilterChipCell
-            isHighlighted={highlightedStageIndex === 1}
+            isHighlighted={highlightedStageIndex === 0}
             onClick={() => handleFilterChipClick("operator")}
           >
             {selectedOperator.label}
@@ -62,7 +64,7 @@ const FilterChip = ({
         <>
           <Divider className="m-1" direction="vertical" />
           <FilterChipCell
-            isHighlighted={highlightedStageIndex === 2}
+            isHighlighted={highlightedStageIndex === 1}
             onClick={() => handleFilterChipClick("value")}
           >
             {Array.isArray(selectedValue)
@@ -75,7 +77,7 @@ const FilterChip = ({
         <>
           <Divider className="m-1" direction="vertical" />
           <FilterChipCell
-            isHighlighted={highlightedStageIndex === 3}
+            isHighlighted={highlightedStageIndex === 2}
             onClick={() => {
               onDelete();
             }}

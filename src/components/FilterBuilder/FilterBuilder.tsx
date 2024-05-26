@@ -4,7 +4,7 @@ import TableFilter from "../../types/TableFilter";
 import useArrowNavigationWithEnter from "../../hooks/useArrowNavigationWithEnter";
 import { FILTER_BUILDER } from "../../consts/ComponentNames";
 
-const FILTER_ITEMS_PER_CHIP = 4;
+export const FILTER_ITEMS_PER_CHIP = 3;
 
 const FilterBuilder = () => {
   // Local state
