@@ -27,6 +27,7 @@ const FilterChipCell = ({
         handleClick();
       }
     };
+
     if (
       isHighlighted &&
       listenerStack[listenerStack.length - 1] === FILTER_BUILDER

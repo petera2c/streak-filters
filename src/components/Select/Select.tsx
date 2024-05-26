@@ -48,7 +48,7 @@ const Select = ({
   const canSelectMultiple = mode === "multiple";
 
   // Custom hooks
-  const highlightedIndex = useArrowNavigationWithEnter({
+  const { highlightedIndex } = useArrowNavigationWithEnter({
     componentId: "select",
     itemCount: filteredOptions?.length || 0,
     onEnter: (highlightedIndex) => {
@@ -92,7 +92,7 @@ const Select = ({
 
   return (
     <div className="relative flex gap-2" onKeyDown={handleKeyDown} ref={ref}>
-      <div className="absolute left-0 top-full pt-4">
+      <div className="absolute left-0 top-full">
         {dropdownRender ? (
           dropdownRender
         ) : (
@@ -102,7 +102,7 @@ const Select = ({
                 <Input
                   autoFocus
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search"
+                  placeholder={"Search"}
                   value={search}
                 />
               </div>

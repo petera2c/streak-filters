@@ -27,6 +27,7 @@ const useArrowNavigationWithEnter = ({
       if (listenerStack[listenerStack.length - 1] !== componentId) {
         return;
       }
+
       if (
         event.key === forwardKey ||
         (event.key === "Tab" && !event.shiftKey)
@@ -87,7 +88,7 @@ const useArrowNavigationWithEnter = ({
     };
   }, [componentId, setListenerStack]);
 
-  return highlightedIndex;
+  return { highlightedIndex };
 };
 
 export default useArrowNavigationWithEnter;

@@ -6,8 +6,9 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 const Input = ({ onEnter, ...props }: InputProps) => {
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      onEnter?.();
+    if (e.key === "Enter" && onEnter) {
+      e.stopPropagation();
+      onEnter();
     }
   };
   return (

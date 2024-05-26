@@ -11,7 +11,7 @@ const FilterBuilder = () => {
   const [filters, setFilters] = useState<TableFilter[]>([]);
 
   // Hooks
-  const highlightedIndex = useArrowNavigationWithEnter({
+  const { highlightedIndex } = useArrowNavigationWithEnter({
     componentId: FILTER_BUILDER,
     direction: "horizontal",
     // 4 is the number of filter items + 1 for the add filter button
