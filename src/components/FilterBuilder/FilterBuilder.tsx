@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Filter from "./Filter";
+import { useEffect, useState } from "react";
 import TableFilter from "../../types/TableFilter";
 import useArrowNavigationWithEnter from "../../hooks/useArrowNavigationWithEnter";
 import { FILTER_BUILDER } from "../../consts/ComponentNames";
+import FilterChip from "./FilterChip";
 
 export const FILTER_ITEMS_PER_CHIP = 3;
 
@@ -11,12 +11,15 @@ const FilterBuilder = () => {
   const [filters, setFilters] = useState<TableFilter[]>([]);
 
   // Hooks
-  const { highlightedIndex } = useArrowNavigationWithEnter({
-    componentId: FILTER_BUILDER,
-    direction: "horizontal",
-    // 4 is the number of filter items + 1 for the add filter button
-    itemCount: filters.length * FILTER_ITEMS_PER_CHIP + 1,
-  });
+  const itemCount = filters.length * FILTER_ITEMS_PER_CHIP + 1;
+  const { highlightedIndex, setHighlightedIndex } = useArrowNavigationWithEnter(
+    {
+      componentId: FILTER_BUILDER,
+      direction: "horizontal",
+      // 4 is the number of filter items + 1 for the add filter button
+      itemCount,
+    }
+  );
 
   // Handlers
   const addFilter = (filter: TableFilter) => {
@@ -33,19 +36,27 @@ const FilterBuilder = () => {
     setFilters(newFilters);
   };
 
+  // Ensure highlightedIndex is within the bounds of the itemCount
+  useEffect(() => {
+    if (highlightedIndex && highlightedIndex > itemCount) {
+      setHighlightedIndex(itemCount - 1);
+    }
+  }, [highlightedIndex, itemCount, setHighlightedIndex]);
+
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 pr-8 w-full">
       {filters.map((filter, index) => (
-        <Filter
+        <FilterChip
           editFilter={editFilter}
           filter={filter}
           highlightedIndex={highlightedIndex}
           index={index}
           key={index}
-          removeFilter={removeFilter}
+          onDelete={() => index !== undefined && removeFilter?.(index)}
+          removable={index !== undefined && Boolean(removeFilter)}
         />
       ))}
-      <Filter
+      <FilterChip
         addFilter={addFilter}
         highlightedIndex={highlightedIndex}
         index={filters.length}

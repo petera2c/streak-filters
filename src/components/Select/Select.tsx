@@ -6,6 +6,7 @@ import SelectOption from "../../types/SelectOption";
 import { getIsSelected } from "./selectUtils";
 
 type SelectProps = {
+  descriptionText?: string;
   dropdownRender?: ReactNode;
   mode?: "multiple" | "default";
   options?: SelectOption[];
@@ -26,6 +27,7 @@ const SelectWrapper = ({ open, ...props }: SelectWrapperProps) => {
 };
 
 const Select = ({
+  descriptionText,
   dropdownRender,
   mode = "default",
   options,
@@ -91,49 +93,61 @@ const Select = ({
   };
 
   return (
-    <div className="relative flex gap-2" onKeyDown={handleKeyDown} ref={ref}>
-      <div className="absolute left-0 top-full">
-        {dropdownRender ? (
-          dropdownRender
-        ) : (
-          <div className="bg-white border border-slate-300 border-solid rounded shadow-md">
-            {showSearch && (
-              <div className="border-b border-solid border-slate-300">
-                <Input
-                  autoFocus
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={"Search"}
-                  value={search}
-                />
+    <div
+      className="absolute left-0 top-full pt-1"
+      onKeyDown={handleKeyDown}
+      ref={ref}
+    >
+      <div className="flex flex-col gap-1">
+        <div className="bg-white border border-slate-300 border-solid rounded shadow-md">
+          {dropdownRender ? (
+            dropdownRender
+          ) : (
+            <>
+              {showSearch && (
+                <div className="border-b border-solid border-slate-300">
+                  <Input
+                    autoFocus
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder={"Search"}
+                    value={search}
+                  />
+                </div>
+              )}
+              <div className="overflow-auto" style={{ maxHeight: "200px" }}>
+                {filteredOptions?.map((option, index) => {
+                  const isSelected = getIsSelected({ option, value });
+                  return (
+                    <div
+                      className={`flex gap-2 px-4 py-1 whitespace-nowrap border-2 border-solid cursor-pointer transition rounded ${
+                        isSelected ? "bg-blue-300" : "hover:bg-slate-300"
+                      } ${
+                        highlightedIndex === index
+                          ? "border-blue-600"
+                          : "border-transparent"
+                      }`}
+                      key={index}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        optionOnClick({ isSelected, option });
+                      }}
+                    >
+                      {canSelectMultiple && (
+                        <Checkbox
+                          onChange={() => optionOnClick({ isSelected, option })}
+                          value={isSelected}
+                        />
+                      )}
+                      {option.label}
+                    </div>
+                  );
+                })}
               </div>
-            )}
-            <div className="overflow-auto" style={{ maxHeight: "200px" }}>
-              {filteredOptions?.map((option, index) => {
-                const isSelected = getIsSelected({ option, value });
-                return (
-                  <div
-                    className={`flex gap-2 px-4 py-1 border-2 border-solid cursor-pointer transition rounded ${
-                      isSelected ? "bg-blue-300" : "hover:bg-slate-300"
-                    } ${
-                      highlightedIndex === index
-                        ? "border-blue-600"
-                        : "border-transparent"
-                    }`}
-                    key={index}
-                    onClick={() => optionOnClick({ isSelected, option })}
-                  >
-                    {canSelectMultiple && (
-                      <Checkbox
-                        onChange={() => optionOnClick({ isSelected, option })}
-                        value={isSelected}
-                      />
-                    )}
-                    {option.label}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            </>
+          )}
+        </div>
+        {descriptionText && (
+          <div className="text-xs text-slate-400">{descriptionText}</div>
         )}
       </div>
     </div>

@@ -42,32 +42,28 @@ const FilterSelectValue = ({
       if (!Array.isArray(selectedValue))
         return (
           <Select
+            descriptionText="(Press enter to apply filter)"
             dropdownRender={
-              <div className="flex flex-col gap-1">
-                <div className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto">
-                  {selectedColumn.type === "STRING" && (
-                    <FilterValueStringInput
-                      createFilter={createFilter}
-                      onChange={(value) =>
-                        setSelectedValue({ label: value, value })
-                      }
-                      value={(selectedValue?.value || "") as string}
-                    />
-                  )}
-                  {selectedColumn.type === "NUMBER" && (
-                    <FilterValueNumberInput
-                      createFilter={createFilter}
-                      onChange={(value) =>
-                        setSelectedValue({ label: String(value), value })
-                      }
-                      value={(selectedValue?.value || "") as string}
-                    />
-                  )}
-                </div>
-                <div className="text-xs text-slate-400">
-                  (Press enter to apply filter)
-                </div>
-              </div>
+              <>
+                {selectedColumn.type === "STRING" && (
+                  <FilterValueStringInput
+                    createFilter={createFilter}
+                    onChange={(value) =>
+                      setSelectedValue({ label: value, value })
+                    }
+                    value={(selectedValue?.value || "") as string}
+                  />
+                )}
+                {selectedColumn.type === "NUMBER" && (
+                  <FilterValueNumberInput
+                    createFilter={createFilter}
+                    onChange={(value) =>
+                      setSelectedValue({ label: String(value), value })
+                    }
+                    value={(selectedValue?.value || "") as string}
+                  />
+                )}
+              </>
             }
             open={open}
             setOpen={setOpen}

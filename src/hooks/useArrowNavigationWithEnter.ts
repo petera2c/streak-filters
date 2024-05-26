@@ -88,7 +88,7 @@ const useArrowNavigationWithEnter = ({
     };
   }, [componentId, setListenerStack]);
 
-  return { highlightedIndex };
+  return { highlightedIndex, setHighlightedIndex };
 };
 
 export default useArrowNavigationWithEnter;

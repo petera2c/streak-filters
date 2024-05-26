@@ -14,6 +14,7 @@ const FilterValueStringInput = ({
       autoFocus
       onChange={(e) => onChange(e.target.value)}
       onEnter={createFilter}
+      placeholder="Enter text"
       value={value}
     />
   );

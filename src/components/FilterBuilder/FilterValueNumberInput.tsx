@@ -18,6 +18,7 @@ const FilterValueNumberInput = ({
         }
       }}
       onEnter={createFilter}
+      placeholder="Enter number"
       type="number"
       value={value}
     />

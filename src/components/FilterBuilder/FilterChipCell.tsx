@@ -43,7 +43,7 @@ const FilterChipCell = ({
 
   return (
     <div
-      className={`p-1 border-2 border-solid rounded ${
+      className={`relative p-1 border-2 border-solid rounded ${
         isHighlighted ? "border-blue-300" : "border-transparent"
       }`}
       onClick={handleClick}
