@@ -4,11 +4,12 @@ import useOnOutsideClick from "../hooks/useOnOutsideClick";
 
 type Option = {
   label: string;
-  value: string | boolean;
+  value: string | boolean | number;
 };
 
 const Select = ({
   dropdownRender,
+  mode = "default",
   options,
   onChange,
   onEnter,
@@ -18,13 +19,14 @@ const Select = ({
   value,
 }: {
   dropdownRender?: ReactNode;
+  mode?: "multiple" | "default";
   options?: Option[];
   onChange?: (option: any) => void;
   onEnter?: () => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   showSearch?: boolean;
-  value?: Option;
+  value?: Option | Option[];
 }) => {
   const ref = useRef(null);
 
@@ -37,8 +39,17 @@ const Select = ({
     }
   };
 
+  const filteredOptions = options?.filter((option) => {
+    return option.label.toLowerCase().includes(search.toLowerCase());
+  });
+
   return (
-    <div className="relative flex gap-2" onKeyDown={handleKeyDown} ref={ref}>
+    <div
+      className="relative flex gap-2"
+      onKeyDown={handleKeyDown}
+      ref={ref}
+      tabIndex={0}
+    >
       {open && (
         <div className="absolute left-0 top-full pt-4">
           {dropdownRender ? (
@@ -58,8 +69,12 @@ const Select = ({
                   />
                 </div>
               )}
-              {options?.map((option, index) => {
-                const isSelected = value?.value === option.value;
+              {filteredOptions?.map((option, index) => {
+                let isSelected = false;
+                if (Array.isArray(value))
+                  isSelected = value.some((v) => v.value === option.value);
+                else isSelected = value?.value === option.value;
+
                 return (
                   <div
                     className={`px-4 py-1 cursor-pointer transition ${

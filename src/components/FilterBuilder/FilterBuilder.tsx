@@ -20,7 +20,7 @@ const FilterBuilder = () => {
   };
 
   return (
-    <div className="flex ">
+    <div className="flex flex-wrap gap-2">
       {filters.map((filter, index) => (
         <Filter
           editFilter={editFilter}

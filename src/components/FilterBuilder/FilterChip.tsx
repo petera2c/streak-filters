@@ -35,7 +35,7 @@ const FilterChip = ({
       {selectedOperator && (
         <>
           <Divider direction="vertical" />
-          <div>{selectedValue}</div>
+          <div>{selectedValue?.label || selectedValue?.value}</div>
         </>
       )}
       {onDelete && removable && (
@@ -44,7 +44,10 @@ const FilterChip = ({
           <FontAwesomeIcon
             className="text-slate-500 cursor-pointer"
             icon={faClose}
-            onClick={onDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
           />
         </>
       )}

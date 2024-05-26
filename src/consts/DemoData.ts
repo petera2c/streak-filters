@@ -1,7 +1,7 @@
 export const DEMO_COLUMNS = [
   {
     value: "annual_revenue",
-    type: "INT",
+    type: "NUMBER",
     label: "Annual revenue",
   },
   {
@@ -41,7 +41,7 @@ export const DEMO_COLUMNS = [
   },
   {
     value: "employees",
-    type: "INT",
+    type: "NUMBER",
     label: "Employees",
   },
   {
@@ -49,6 +49,7 @@ export const DEMO_COLUMNS = [
     type: "STRING",
     label: "Fax",
   },
+  { value: "is_paying", type: "BOOLEAN", label: "Is paying" },
   {
     value: "name",
     type: "STRING",
@@ -98,7 +99,7 @@ export const DEMO_COLUMNS = [
     value: "paying_status",
     type: "ENUM",
     label: "Paying status",
-    values: [
+    relations: [
       {
         value: "not_paying",
         label: "Not paying",
@@ -129,7 +130,7 @@ export const DEMO_COLUMNS = [
     value: "owner_user",
     type: "RELATION",
     label: "Owner user",
-    values: [
+    relations: [
       {
         value: "{{current_user.id}}",
         label: "Current User",
@@ -140,7 +141,7 @@ export const DEMO_COLUMNS = [
     value: "industry",
     type: "RELATION",
     label: "Industry",
-    values: [
+    relations: [
       {
         value: "account.industry:'Advertising'",
         label: "Advertising",
@@ -284,21 +285,10 @@ export const DEMO_COLUMNS = [
     ],
   },
   {
-    value: "invoice_template",
-    type: "RELATION",
-    label: "Invoice template",
-    values: [
-      {
-        value: "account.invoice_template:'Default template'",
-        label: "Default template",
-      },
-    ],
-  },
-  {
     value: "account_type",
     type: "RELATION",
     label: "Account type",
-    values: [
+    relations: [
       {
         value: "account.account_type:'Analyst'",
         label: "Analyst",

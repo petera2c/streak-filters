@@ -8,6 +8,7 @@ import FilterSelectColumn from "./FilterSelectColumn";
 import FilterSelectOperator from "./FilterSelectOperator";
 import FilterSelectValue from "./FilterSelectValue";
 import useOnOutsideClick from "../../hooks/useOnOutsideClick";
+import { BOOLEAN_OPERATORS } from "../../consts/Operators";
 
 const Filter = ({
   addFilter,
@@ -29,7 +30,7 @@ const Filter = ({
   const [selectedColumn, setSelectedColumn] = useState<TableColumn>();
   const [selectedOperator, setSelectedOperator] =
     useState<TableFilterOperator>();
-  const [selectedValue, setSelectedValue] = useState<TableFilterValue>("");
+  const [selectedValue, setSelectedValue] = useState<TableFilterValue>();
   const [open, setOpen] = useState(false);
   const [currentlyEditing, setCurrentlyEditing] = useState<
     "column" | "operator" | "value"
@@ -54,7 +55,9 @@ const Filter = ({
   const reset = () => {
     setSelectedColumn(undefined);
     setSelectedOperator(undefined);
-    setSelectedValue("");
+    setSelectedValue(undefined);
+    setCurrentlyEditing("column");
+    setOpen(false);
   };
   const onEnter = () => {
     if (canEditFilter) {
@@ -74,7 +77,12 @@ const Filter = ({
   };
   const onColumnChange = (value: TableColumn) => {
     setSelectedColumn(value);
-    setCurrentlyEditing("operator");
+    if (value.type === "BOOLEAN") {
+      setSelectedOperator(BOOLEAN_OPERATORS[0]);
+      setCurrentlyEditing("value");
+    } else {
+      setCurrentlyEditing("operator");
+    }
   };
   const onOperatorChange = (value: TableFilterOperator) => {
     setSelectedOperator(value);
@@ -87,14 +95,26 @@ const Filter = ({
       setSelectedColumn(filter.column);
       setSelectedOperator(filter.operator);
       setSelectedValue(filter.value);
+      setCurrentlyEditing("operator");
     }
   }, [filter]);
+
+  useEffect(() => {
+    if (
+      selectedColumn &&
+      selectedOperator &&
+      typeof selectedValue?.value === "boolean" &&
+      !filter
+    ) {
+      // onEnter();
+    }
+  }, [filter, selectedColumn, selectedOperator, selectedValue]);
 
   return (
     <div className="relative flex flex-col" ref={filterRef}>
       <FilterChip
         onClick={() => setOpen(true)}
-        onDelete={() => index && removeFilter?.(index)}
+        onDelete={() => index !== undefined && removeFilter?.(index)}
         removable={index !== undefined && Boolean(removeFilter)}
         selectedColumn={selectedColumn}
         selectedOperator={selectedOperator}
@@ -121,6 +141,7 @@ const Filter = ({
         <FilterSelectValue
           onEnter={onEnter}
           open={open}
+          selectedColumn={selectedColumn}
           selectedValue={selectedValue}
           setOpen={setOpen}
           setSelectedValue={setSelectedValue}

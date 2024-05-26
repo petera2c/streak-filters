@@ -11,8 +11,6 @@ export const getOperators = (column: TableColumn) => {
   switch (column.type) {
     case "STRING":
       return STRING_OPERATORS;
-    case "INT":
-      return NUMERIC_OPERATORS;
     case "RELATION":
       return STRING_OPERATORS;
     case "NUMBER":

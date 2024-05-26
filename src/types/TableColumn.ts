@@ -1,8 +1,8 @@
 type TableColumn = {
   label: string;
-  type: string;
+  type: "STRING" | "NUMBER" | "RELATION" | "ENUM" | "BOOLEAN" | "DATE";
   value: string;
-  values?: { label: string; value: string }[];
+  relations?: { label: string; value: string }[];
 };
 
 export default TableColumn;
