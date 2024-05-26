@@ -1,4 +1,3 @@
-import TableFilterValue from "../../types/TableFilterValue";
 import Input from "../Input";
 
 const FilterValueInput = ({

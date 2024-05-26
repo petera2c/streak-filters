@@ -1,5 +1,4 @@
 import { BOOLEAN_VALUES } from "../../consts/FilterValues";
-import { BOOLEAN_OPERATORS } from "../../consts/Operators";
 import TableColumn from "../../types/TableColumn";
 import TableFilterValue from "../../types/TableFilterValue";
 import Select from "../Select";

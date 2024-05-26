@@ -1,6 +1,5 @@
 import { ReactNode, useRef, useState } from "react";
 import Input from "./Input";
-import useOnOutsideClick from "../hooks/useOnOutsideClick";
 
 type Option = {
   label: string;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TableFilter from "../../types/TableFilter";
 import TableColumn from "../../types/TableColumn";
 import FilterChip from "./FilterChip";
@@ -67,7 +67,7 @@ const Filter = ({
     setCompleteFilter(false);
   };
 
-  const createFilter = () => {
+  const createFilter = useCallback(() => {
     if (canEditFilter) {
       editFilter(index, {
         column: selectedColumn,
@@ -82,7 +82,16 @@ const Filter = ({
       });
       reset();
     }
-  };
+  }, [
+    addFilter,
+    canAddFilter,
+    canEditFilter,
+    editFilter,
+    index,
+    selectedColumn,
+    selectedOperator,
+    selectedValue,
+  ]);
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       createFilter();
@@ -122,7 +131,14 @@ const Filter = ({
     ) {
       createFilter();
     }
-  }, [filter, selectedColumn, selectedOperator, selectedValue]);
+  }, [
+    completeFilter,
+    createFilter,
+    filter,
+    selectedColumn,
+    selectedOperator,
+    selectedValue,
+  ]);
 
   return (
     <div
