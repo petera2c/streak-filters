@@ -1,7 +1,11 @@
+import TableColumn from "./TableColumn";
+import TableFilterOperator from "./TableFilterOperator";
+import TableFilterValue from "./TableFilterValue";
+
 type TableFilter = {
-  column: string;
-  operator: string;
-  value: string | string[] | number | number[] | boolean;
+  column: TableColumn;
+  operator: TableFilterOperator;
+  value: TableFilterValue;
 };
 
 export default TableFilter;

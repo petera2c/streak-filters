@@ -27,12 +27,3 @@ export const getOperators = (column: TableColumn) => {
       return [];
   }
 };
-
-const formatValues = (column: TableColumn) => {
-  if (column.values) return column.values;
-  else
-    switch (column.type) {
-      case "STRING":
-        return;
-    }
-};
