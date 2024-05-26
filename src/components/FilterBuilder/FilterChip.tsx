@@ -5,8 +5,11 @@ import Divider from "../Divider";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import TableFilterValue from "../../types/TableFilterValue";
 import FilterEditingStage from "../../types/FilterEditingStage";
+import FilterChipCell from "./FilterChipCell";
 
 const FilterChip = ({
+  highlightedIndex,
+  index,
   onClick,
   onDelete,
   removable,
@@ -14,6 +17,8 @@ const FilterChip = ({
   selectedOperator,
   selectedValue,
 }: {
+  highlightedIndex?: number;
+  index?: number;
   onClick: (editingStage: FilterEditingStage) => void;
   onDelete?: () => void;
   removable?: boolean;
@@ -21,58 +26,65 @@ const FilterChip = ({
   selectedOperator?: TableFilterOperator;
   selectedValue?: TableFilterValue;
 }) => {
-  const handleFilterChipClick = (
-    e: React.MouseEvent<HTMLDivElement>,
-    editingStage: FilterEditingStage
-  ) => {
-    e.stopPropagation();
+  const handleFilterChipClick = (editingStage: FilterEditingStage) => {
     onClick(editingStage);
   };
+  const isFilterChipHighlighted =
+    highlightedIndex !== undefined &&
+    index !== undefined &&
+    highlightedIndex >= index * 4 &&
+    highlightedIndex < (index + 1) * 4;
+
+  const highlightedStageIndex = isFilterChipHighlighted
+    ? highlightedIndex % 4
+    : undefined;
 
   return (
-    <div className="flex items-center border border-solid border-slate-300 rounded cursor-pointer p-1">
-      <div className="p-1" onClick={(e) => handleFilterChipClick(e, "column")}>
+    <div className="flex items-center border border-solid border-slate-300 rounded cursor-pointer">
+      <FilterChipCell
+        isHighlighted={highlightedStageIndex === 0}
+        onClick={() => handleFilterChipClick("column")}
+      >
         {selectedColumn ? selectedColumn.label : "Filter"}
-      </div>
+      </FilterChipCell>
       {selectedOperator && (
         <>
           <Divider className="m-1" direction="vertical" />
-          <div
-            className="p-1"
-            onClick={(e) => handleFilterChipClick(e, "operator")}
+          <FilterChipCell
+            isHighlighted={highlightedStageIndex === 1}
+            onClick={() => handleFilterChipClick("operator")}
           >
             {selectedOperator.label}
-          </div>
+          </FilterChipCell>
         </>
       )}
       {selectedValue && (
         <>
           <Divider className="m-1" direction="vertical" />
-          <div
-            className="p-1"
-            onClick={(e) => handleFilterChipClick(e, "value")}
+          <FilterChipCell
+            isHighlighted={highlightedStageIndex === 2}
+            onClick={() => handleFilterChipClick("value")}
           >
             {Array.isArray(selectedValue)
               ? selectedValue?.map((item) => item.label).join(", ")
               : selectedValue?.label || selectedValue?.value}
-          </div>
+          </FilterChipCell>
         </>
       )}
       {onDelete && removable && (
         <>
           <Divider className="m-1" direction="vertical" />
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
+          <FilterChipCell
+            isHighlighted={highlightedStageIndex === 3}
+            onClick={() => {
               onDelete();
             }}
           >
             <FontAwesomeIcon
-              className="text-slate-400 hover:text-slate-600 transition-colors p-1"
+              className="flex items-center text-slate-400 hover:text-slate-600 transition-colors p-1"
               icon={faClose}
             />
-          </div>
+          </FilterChipCell>
         </>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState } from "react";
 import Input from "../Input";
 import Checkbox from "../Checkbox";
-import useArrowNavigation from "../../hooks/useArrowNavigationWithEnter";
+import useArrowNavigationWithEnter from "../../hooks/useArrowNavigationWithEnter";
 import SelectOption from "../../types/SelectOption";
 import { getIsSelected } from "./selectUtils";
 
@@ -11,18 +11,26 @@ type SelectProps = {
   options?: SelectOption[];
   onChange?: (option: any) => void;
   onEnter?: () => void;
-  open: boolean;
   setOpen: (open: boolean) => void;
   showSearch?: boolean;
   value?: SelectOption | SelectOption[];
 };
+
+type SelectWrapperProps = SelectProps & {
+  open: boolean;
+};
+
+const SelectWrapper = ({ open, ...props }: SelectWrapperProps) => {
+  if (!open) return null;
+  return <Select {...props} />;
+};
+
 const Select = ({
   dropdownRender,
   mode = "default",
   options,
   onChange,
   onEnter,
-  open,
   setOpen,
   showSearch,
   value,
@@ -40,20 +48,19 @@ const Select = ({
   const canSelectMultiple = mode === "multiple";
 
   // Custom hooks
-  const highlightedIndex = useArrowNavigation({
+  const highlightedIndex = useArrowNavigationWithEnter({
+    componentId: "select",
     itemCount: filteredOptions?.length || 0,
     onEnter: (highlightedIndex) => {
-      if (open) {
-        if (highlightedIndex !== undefined) {
-          const option = filteredOptions?.[highlightedIndex];
-          if (option) {
-            const isSelected = getIsSelected({ option, value });
-            optionOnClick({ isSelected, option });
-          }
+      if (highlightedIndex !== undefined) {
+        const option = filteredOptions?.[highlightedIndex];
+        if (option) {
+          const isSelected = getIsSelected({ option, value });
+          optionOnClick({ isSelected, option });
         }
-
-        onEnter?.();
       }
+
+      onEnter?.();
     },
   });
 
@@ -85,54 +92,52 @@ const Select = ({
 
   return (
     <div className="relative flex gap-2" onKeyDown={handleKeyDown} ref={ref}>
-      {open && (
-        <div className="absolute left-0 top-full pt-4">
-          {dropdownRender ? (
-            dropdownRender
-          ) : (
-            <div className="bg-white border border-slate-300 border-solid rounded shadow-md">
-              {showSearch && (
-                <div className="border-b border-solid border-slate-300">
-                  <Input
-                    autoFocus
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search"
-                    value={search}
-                  />
-                </div>
-              )}
-              <div className="overflow-auto" style={{ maxHeight: "200px" }}>
-                {filteredOptions?.map((option, index) => {
-                  const isSelected = getIsSelected({ option, value });
-                  return (
-                    <div
-                      className={`flex gap-2 px-4 py-1 border-2 border-solid cursor-pointer transition rounded ${
-                        isSelected ? "bg-blue-300" : "hover:bg-slate-300"
-                      } ${
-                        highlightedIndex === index
-                          ? "border-blue-600"
-                          : "border-transparent"
-                      }`}
-                      key={index}
-                      onClick={() => optionOnClick({ isSelected, option })}
-                    >
-                      {canSelectMultiple && (
-                        <Checkbox
-                          onChange={() => optionOnClick({ isSelected, option })}
-                          value={isSelected}
-                        />
-                      )}
-                      {option.label}
-                    </div>
-                  );
-                })}
+      <div className="absolute left-0 top-full pt-4">
+        {dropdownRender ? (
+          dropdownRender
+        ) : (
+          <div className="bg-white border border-slate-300 border-solid rounded shadow-md">
+            {showSearch && (
+              <div className="border-b border-solid border-slate-300">
+                <Input
+                  autoFocus
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search"
+                  value={search}
+                />
               </div>
+            )}
+            <div className="overflow-auto" style={{ maxHeight: "200px" }}>
+              {filteredOptions?.map((option, index) => {
+                const isSelected = getIsSelected({ option, value });
+                return (
+                  <div
+                    className={`flex gap-2 px-4 py-1 border-2 border-solid cursor-pointer transition rounded ${
+                      isSelected ? "bg-blue-300" : "hover:bg-slate-300"
+                    } ${
+                      highlightedIndex === index
+                        ? "border-blue-600"
+                        : "border-transparent"
+                    }`}
+                    key={index}
+                    onClick={() => optionOnClick({ isSelected, option })}
+                  >
+                    {canSelectMultiple && (
+                      <Checkbox
+                        onChange={() => optionOnClick({ isSelected, option })}
+                        value={isSelected}
+                      />
+                    )}
+                    {option.label}
+                  </div>
+                );
+              })}
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Select;
+export default SelectWrapper;

@@ -1,6 +1,6 @@
 import Input from "../Input";
 
-const FilterValueInput = ({
+const FilterValueStringInput = ({
   createFilter,
   onChange,
   value,
@@ -19,4 +19,4 @@ const FilterValueInput = ({
   );
 };
 
-export default FilterValueInput;
+export default FilterValueStringInput;

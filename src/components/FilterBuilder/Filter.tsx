@@ -13,15 +13,15 @@ import FilterEditingStage from "../../types/FilterEditingStage";
 
 const Filter = ({
   addFilter,
-  defaultOpen,
   editFilter,
+  highlightedIndex,
   index,
   filter,
   removeFilter,
 }: {
   addFilter?: (filter: TableFilter) => void;
-  defaultOpen: boolean;
   editFilter?: (index: number, filter: TableFilter) => void;
+  highlightedIndex?: number;
   index?: number;
   filter?: TableFilter;
   removeFilter?: (index: number) => void;
@@ -39,7 +39,7 @@ const Filter = ({
   const [selectedValue, setSelectedValue] = useState<
     TableFilterValue | undefined
   >(filter?.value);
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(false);
   const [currentlyEditing, setCurrentlyEditing] =
     useState<FilterEditingStage>("column");
   const [completeFilter, setCompleteFilter] = useState<boolean>(false);
@@ -145,6 +145,8 @@ const Filter = ({
   return (
     <div className="relative flex flex-col" ref={filterRef}>
       <FilterChip
+        highlightedIndex={highlightedIndex}
+        index={index}
         onClick={(editingStage: FilterEditingStage) => {
           setCurrentlyEditing(editingStage);
           setOpen(true);

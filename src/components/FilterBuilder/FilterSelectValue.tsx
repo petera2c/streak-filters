@@ -2,8 +2,8 @@ import { BOOLEAN_VALUES } from "../../consts/FilterValues";
 import TableColumn from "../../types/TableColumn";
 import TableFilterValue from "../../types/TableFilterValue";
 import Select from "../Select/Select";
-import FilterValueNumber from "./FilterValueNumber";
-import FilterValueInput from "./FilterValueString";
+import FilterValueNumberInput from "./FilterValueNumberInput";
+import FilterValueStringInput from "./FilterValueStringInput";
 
 const FilterSelectValue = ({
   createFilter,
@@ -46,7 +46,7 @@ const FilterSelectValue = ({
               <div className="flex flex-col gap-1">
                 <div className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto">
                   {selectedColumn.type === "STRING" && (
-                    <FilterValueInput
+                    <FilterValueStringInput
                       createFilter={createFilter}
                       onChange={(value) =>
                         setSelectedValue({ label: value, value })
@@ -55,7 +55,7 @@ const FilterSelectValue = ({
                     />
                   )}
                   {selectedColumn.type === "NUMBER" && (
-                    <FilterValueNumber
+                    <FilterValueNumberInput
                       createFilter={createFilter}
                       onChange={(value) =>
                         setSelectedValue({ label: String(value), value })
