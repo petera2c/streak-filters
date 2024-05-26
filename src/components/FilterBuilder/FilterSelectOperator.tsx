@@ -1,6 +1,6 @@
 import TableColumn from "../../types/TableColumn";
 import TableFilterOperator from "../../types/TableFilterOperator";
-import Select from "../Select";
+import Select from "../Select/Select";
 import { getOperators } from "./FilterBuilderUtils";
 
 const FilterSelectOperator = ({

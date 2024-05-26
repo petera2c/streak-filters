@@ -136,11 +136,11 @@ const Filter = ({
     selectedValue,
   ]);
 
-  // useEffect(() => {
-  //   if (!open && !filter) {
-  //     reset();
-  //   }
-  // }, [createFilter, open]);
+  useEffect(() => {
+    if (!open && !filter) {
+      reset();
+    }
+  }, [filter, open]);
 
   return (
     <div className="relative flex flex-col" ref={filterRef}>

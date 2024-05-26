@@ -1,7 +1,7 @@
 import { BOOLEAN_VALUES } from "../../consts/FilterValues";
 import TableColumn from "../../types/TableColumn";
 import TableFilterValue from "../../types/TableFilterValue";
-import Select from "../Select";
+import Select from "../Select/Select";
 import FilterValueNumber from "./FilterValueNumber";
 import FilterValueInput from "./FilterValueString";
 
@@ -26,23 +26,16 @@ const FilterSelectValue = ({
     case "RELATION":
     case "ENUM":
       return (
-        <div
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              setCompleteFilter(true);
-            }
-          }}
-        >
-          <Select
-            mode="multiple"
-            open={open}
-            options={selectedColumn.relations}
-            setOpen={setOpen}
-            onChange={setSelectedValue}
-            showSearch
-            value={selectedValue}
-          />
-        </div>
+        <Select
+          mode="multiple"
+          onChange={setSelectedValue}
+          onEnter={() => setCompleteFilter(true)}
+          open={open}
+          options={selectedColumn.relations}
+          setOpen={setOpen}
+          showSearch
+          value={selectedValue}
+        />
       );
     case "STRING":
     case "NUMBER":
@@ -83,20 +76,13 @@ const FilterSelectValue = ({
       else return <></>;
     case "BOOLEAN":
       return (
-        <div
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              setCompleteFilter(true);
-            }
-          }}
-        >
-          <Select
-            onChange={setSelectedValue}
-            open={open}
-            options={BOOLEAN_VALUES}
-            setOpen={setOpen}
-          />
-        </div>
+        <Select
+          onChange={setSelectedValue}
+          onEnter={() => setCompleteFilter(true)}
+          open={open}
+          options={BOOLEAN_VALUES}
+          setOpen={setOpen}
+        />
       );
 
     default:

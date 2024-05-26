@@ -1,6 +1,6 @@
 import { DEMO_COLUMNS } from "../../consts/DemoData";
 import TableColumn from "../../types/TableColumn";
-import Select from "../Select";
+import Select from "../Select/Select";
 
 const FilterSelectColumn = ({
   onChange,

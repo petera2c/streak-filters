@@ -1,31 +1,32 @@
 import { ReactNode, useRef, useState } from "react";
-import Input from "./Input";
-import Checkbox from "./Checkbox";
+import Input from "../Input";
+import Checkbox from "../Checkbox";
+import useArrowNavigation from "../../hooks/useArrowNavigationWithEnter";
+import SelectOption from "../../types/SelectOption";
+import { getIsSelected } from "./selectUtils";
 
-type Option = {
-  label: string;
-  value: string | boolean | number;
+type SelectProps = {
+  dropdownRender?: ReactNode;
+  mode?: "multiple" | "default";
+  options?: SelectOption[];
+  onChange?: (option: any) => void;
+  onEnter?: () => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  showSearch?: boolean;
+  value?: SelectOption | SelectOption[];
 };
-
 const Select = ({
   dropdownRender,
   mode = "default",
   options,
   onChange,
+  onEnter,
   open,
   setOpen,
   showSearch,
   value,
-}: {
-  dropdownRender?: ReactNode;
-  mode?: "multiple" | "default";
-  options?: Option[];
-  onChange?: (option: any) => void;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  showSearch?: boolean;
-  value?: Option | Option[];
-}) => {
+}: SelectProps) => {
   // Refs
   const ref = useRef(null);
 
@@ -38,6 +39,24 @@ const Select = ({
   });
   const canSelectMultiple = mode === "multiple";
 
+  // Custom hooks
+  const highlightedIndex = useArrowNavigation({
+    itemCount: filteredOptions?.length || 0,
+    onEnter: (highlightedIndex) => {
+      if (open) {
+        if (highlightedIndex !== undefined) {
+          const option = filteredOptions?.[highlightedIndex];
+          if (option) {
+            const isSelected = getIsSelected({ option, value });
+            optionOnClick({ isSelected, option });
+          }
+        }
+
+        onEnter?.();
+      }
+    },
+  });
+
   // Handlers
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
@@ -49,7 +68,7 @@ const Select = ({
     option,
   }: {
     isSelected: boolean;
-    option: Option;
+    option: SelectOption;
   }) => {
     if (canSelectMultiple) {
       if (Array.isArray(value)) {
@@ -84,19 +103,18 @@ const Select = ({
               )}
               <div className="overflow-auto" style={{ maxHeight: "200px" }}>
                 {filteredOptions?.map((option, index) => {
-                  let isSelected = false;
-                  if (Array.isArray(value))
-                    isSelected = value.some((v) => v.value === option.value);
-                  else isSelected = value?.value === option.value;
-
+                  const isSelected = getIsSelected({ option, value });
                   return (
                     <div
-                      className={`flex gap-2 px-4 py-1 cursor-pointer transition ${
+                      className={`flex gap-2 px-4 py-1 border-2 border-solid cursor-pointer transition rounded ${
                         isSelected ? "bg-blue-300" : "hover:bg-slate-300"
+                      } ${
+                        highlightedIndex === index
+                          ? "border-blue-600"
+                          : "border-transparent"
                       }`}
                       key={index}
                       onClick={() => optionOnClick({ isSelected, option })}
-                      data-value={option.value}
                     >
                       {canSelectMultiple && (
                         <Checkbox

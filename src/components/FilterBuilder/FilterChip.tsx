@@ -31,11 +31,7 @@ const FilterChip = ({
 
   return (
     <div className="flex items-center border border-solid border-slate-300 rounded cursor-pointer p-1">
-      <div
-        className="p-1"
-        onClick={(e) => handleFilterChipClick(e, "column")}
-        tabIndex={selectedValue === undefined ? 0 : undefined}
-      >
+      <div className="p-1" onClick={(e) => handleFilterChipClick(e, "column")}>
         {selectedColumn ? selectedColumn.label : "Filter"}
       </div>
       {selectedOperator && (
@@ -44,7 +40,6 @@ const FilterChip = ({
           <div
             className="p-1"
             onClick={(e) => handleFilterChipClick(e, "operator")}
-            tabIndex={0}
           >
             {selectedOperator.label}
           </div>
@@ -56,7 +51,6 @@ const FilterChip = ({
           <div
             className="p-1"
             onClick={(e) => handleFilterChipClick(e, "value")}
-            tabIndex={0}
           >
             {Array.isArray(selectedValue)
               ? selectedValue?.map((item) => item.label).join(", ")
@@ -73,7 +67,6 @@ const FilterChip = ({
               e.stopPropagation();
               onDelete();
             }}
-            tabIndex={0}
           >
             <FontAwesomeIcon
               className="text-slate-400 hover:text-slate-600 transition-colors p-1"
