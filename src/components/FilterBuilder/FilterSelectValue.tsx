@@ -73,7 +73,10 @@ const FilterSelectValue = ({
     case "BOOLEAN":
       return (
         <Select
-          onChange={setSelectedValue}
+          onChange={(value) => {
+            setSelectedValue(value);
+            setCompleteFilter(true);
+          }}
           onEnter={() => setCompleteFilter(true)}
           open={open}
           options={BOOLEAN_VALUES}
