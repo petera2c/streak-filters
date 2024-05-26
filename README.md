@@ -1,5 +1,13 @@
 # Filter Builder Application
 
+## Usage
+
+To set up the Filter Builder in your project, follow these steps:
+
+1. Clone the repository.
+2. Install the necessary dependencies via `npm install`.
+3. `npm start` to run the application.
+
 ## Overview
 
 This application is a Filter Builder designed for tables, utilizing React and TypeScript. It provides a dynamic way to create and apply filters to data tables, enhancing user interaction and data handling capabilities.
@@ -25,11 +33,3 @@ Operators are divided based on the data type they support:
 - **Boolean Operators**: Is true, Is false.
 - **Enum Operators**: Equal to, Not equal to.
 - **List Operators**: Contains, Does not contain.
-
-## Usage
-
-To set up the Filter Builder in your project, follow these steps:
-
-1. Clone the repository.
-2. Install the necessary dependencies via `npm install`.
-3. `npm start` to run the application.

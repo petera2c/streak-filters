@@ -24,44 +24,35 @@ const NOT_BETWEEN = { label: "Not between", value: "not_between" };
 const IS_TRUE = { label: "is", value: true };
 const IS_FALSE = { label: "is", value: false };
 
-export const TEXT_OPERATORS = {
+export const STRING_OPERATORS = [
   EQUAL_TO,
   NOT_EQUAL_TO,
   CONTAINS,
   DOES_NOT_CONTAIN,
   STARTS_WITH,
   ENDS_WITH,
-};
+];
 
-export const NUMERIC_OPERATORS = {
+export const NUMERIC_OPERATORS = [
   EQUAL_TO,
   NOT_EQUAL_TO,
   GREATER_THAN,
   LESS_THAN,
   GREATER_THAN_OR_EQUAL_TO,
   LESS_THAN_OR_EQUAL_TO,
-};
+];
 
-export const DATE_OPERATORS = {
+export const DATE_OPERATORS = [
   EQUAL_TO,
   NOT_EQUAL_TO,
   BEFORE,
   AFTER,
   BETWEEN,
   NOT_BETWEEN,
-};
+];
 
-export const BOOLEAN_OPERATORS = {
-  IS_TRUE,
-  IS_FALSE,
-};
+export const BOOLEAN_OPERATORS = [IS_TRUE, IS_FALSE];
 
-export const ENUM_OPERATORS = {
-  EQUAL_TO,
-  NOT_EQUAL_TO,
-};
+export const ENUM_OPERATORS = [EQUAL_TO, NOT_EQUAL_TO];
 
-export const LIST_OPERATORS = {
-  CONTAINS,
-  DOES_NOT_CONTAIN,
-};
+export const LIST_OPERATORS = [CONTAINS, DOES_NOT_CONTAIN];
