@@ -40,6 +40,21 @@ const Select = ({
   // Handlers
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      const activeElement = document.activeElement as HTMLElement;
+      const optionValue = activeElement?.dataset.value;
+
+      const option = options?.find((o) => o.value === optionValue);
+      const isSelected = Array.isArray(value)
+        ? value.some((v) => v.value === optionValue)
+        : value?.value === optionValue;
+
+      if (option) {
+        optionOnClick({
+          isSelected,
+          option,
+        });
+      }
+    } else if (e.key === "Escape") {
       setOpen(false);
     }
   };
@@ -102,6 +117,8 @@ const Select = ({
                     }`}
                     key={index}
                     onClick={() => optionOnClick({ isSelected, option })}
+                    data-value={option.value}
+                    tabIndex={0}
                   >
                     {option.label}
                   </div>
