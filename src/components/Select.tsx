@@ -39,22 +39,7 @@ const Select = ({
 
   // Handlers
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const activeElement = document.activeElement as HTMLElement;
-      const optionValue = activeElement?.dataset.value;
-
-      const option = options?.find((o) => o.value === optionValue);
-      const isSelected = Array.isArray(value)
-        ? value.some((v) => v.value === optionValue)
-        : value?.value === optionValue;
-
-      if (option) {
-        optionOnClick({
-          isSelected,
-          option,
-        });
-      }
-    } else if (e.key === "Escape") {
+    if (e.key === "Escape") {
       setOpen(false);
     }
   };
@@ -79,21 +64,13 @@ const Select = ({
   };
 
   return (
-    <div
-      className="relative flex gap-2"
-      onKeyDown={handleKeyDown}
-      ref={ref}
-      tabIndex={0}
-    >
+    <div className="relative flex gap-2" onKeyDown={handleKeyDown} ref={ref}>
       {open && (
         <div className="absolute left-0 top-full pt-4">
           {dropdownRender ? (
             dropdownRender
           ) : (
-            <div
-              className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto"
-              style={{ maxHeight: "200px" }}
-            >
+            <div className="bg-white border border-slate-300 border-solid rounded shadow-md">
               {showSearch && (
                 <div className="border-b border-solid border-slate-300">
                   <Input
@@ -104,26 +81,28 @@ const Select = ({
                   />
                 </div>
               )}
-              {filteredOptions?.map((option, index) => {
-                let isSelected = false;
-                if (Array.isArray(value))
-                  isSelected = value.some((v) => v.value === option.value);
-                else isSelected = value?.value === option.value;
+              <div className="overflow-auto" style={{ maxHeight: "200px" }}>
+                {filteredOptions?.map((option, index) => {
+                  let isSelected = false;
+                  if (Array.isArray(value))
+                    isSelected = value.some((v) => v.value === option.value);
+                  else isSelected = value?.value === option.value;
 
-                return (
-                  <div
-                    className={`px-4 py-1 cursor-pointer transition ${
-                      isSelected ? "bg-blue-300" : "hover:bg-slate-300"
-                    }`}
-                    key={index}
-                    onClick={() => optionOnClick({ isSelected, option })}
-                    data-value={option.value}
-                    tabIndex={0}
-                  >
-                    {option.label}
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      className={`px-4 py-1 cursor-pointer transition ${
+                        isSelected ? "bg-blue-300" : "hover:bg-slate-300"
+                      }`}
+                      key={index}
+                      onClick={() => optionOnClick({ isSelected, option })}
+                      data-value={option.value}
+                      tabIndex={0}
+                    >
+                      {option.label}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

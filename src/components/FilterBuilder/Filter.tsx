@@ -9,6 +9,7 @@ import FilterSelectOperator from "./FilterSelectOperator";
 import FilterSelectValue from "./FilterSelectValue";
 import useOnOutsideClick from "../../hooks/useOnOutsideClick";
 import { BOOLEAN_OPERATORS } from "../../consts/Operators";
+import FilterEditingStage from "../../types/FilterEditingStage";
 
 const Filter = ({
   addFilter,
@@ -37,9 +38,8 @@ const Filter = ({
     TableFilterValue | undefined
   >(filter?.value);
   const [open, setOpen] = useState(false);
-  const [currentlyEditing, setCurrentlyEditing] = useState<
-    "column" | "operator" | "value"
-  >("column");
+  const [currentlyEditing, setCurrentlyEditing] =
+    useState<FilterEditingStage>("column");
   const [completeFilter, setCompleteFilter] = useState<boolean>(false);
 
   // Custom hooks
@@ -63,7 +63,6 @@ const Filter = ({
     setSelectedOperator(undefined);
     setSelectedValue(undefined);
     setCurrentlyEditing("column");
-    setOpen(false);
     setCompleteFilter(false);
   };
 
@@ -80,7 +79,7 @@ const Filter = ({
         operator: selectedOperator,
         value: selectedValue,
       });
-      reset();
+      setOpen(false);
     }
   }, [
     addFilter,
@@ -121,6 +120,7 @@ const Filter = ({
     }
   }, [filter]);
 
+  // Create filter when complete
   useEffect(() => {
     if (
       selectedColumn &&
@@ -140,15 +140,23 @@ const Filter = ({
     selectedValue,
   ]);
 
+  useEffect(() => {
+    if (!open && !filter) {
+      reset();
+    }
+  }, [open]);
+
   return (
     <div
       className="relative flex flex-col"
       onKeyDown={onKeyDown}
       ref={filterRef}
-      tabIndex={0}
     >
       <FilterChip
-        onClick={() => setOpen(true)}
+        onClick={(editingStage: FilterEditingStage) => {
+          setCurrentlyEditing(editingStage);
+          setOpen(true);
+        }}
         onDelete={() => index !== undefined && removeFilter?.(index)}
         removable={index !== undefined && Boolean(removeFilter)}
         selectedColumn={selectedColumn}

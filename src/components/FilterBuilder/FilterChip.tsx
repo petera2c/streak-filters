@@ -4,6 +4,7 @@ import TableFilterOperator from "../../types/TableFilterOperator";
 import Divider from "../Divider";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import TableFilterValue from "../../types/TableFilterValue";
+import FilterEditingStage from "../../types/FilterEditingStage";
 
 const FilterChip = ({
   onClick,
@@ -13,29 +14,50 @@ const FilterChip = ({
   selectedOperator,
   selectedValue,
 }: {
-  onClick: () => void;
+  onClick: (editingStage: FilterEditingStage) => void;
   onDelete?: () => void;
   removable?: boolean;
   selectedColumn?: TableColumn;
   selectedOperator?: TableFilterOperator;
   selectedValue?: TableFilterValue;
 }) => {
+  const handleFilterChipClick = (
+    e: React.MouseEvent<HTMLDivElement>,
+    editingStage: FilterEditingStage
+  ) => {
+    e.stopPropagation();
+    onClick(editingStage);
+  };
+
   return (
-    <div
-      className="flex items-center border border-solid border-slate-300 rounded px-2 py-1 gap-2 cursor-pointer"
-      onClick={onClick}
-    >
-      <div>{selectedColumn ? selectedColumn.label : "Filter"}</div>
-      {selectedColumn && (
-        <>
-          <Divider direction="vertical" />
-          <div>{selectedOperator ? selectedOperator.label : "Operation"}</div>
-        </>
-      )}
+    <div className="flex items-center border border-solid border-slate-300 rounded cursor-pointer p-1">
+      <div
+        className="p-1"
+        onClick={(e) => handleFilterChipClick(e, "column")}
+        tabIndex={selectedValue === undefined ? 0 : undefined}
+      >
+        {selectedColumn ? selectedColumn.label : "Filter"}
+      </div>
       {selectedOperator && (
         <>
-          <Divider direction="vertical" />
-          <div>
+          <Divider className="m-1" direction="vertical" />
+          <div
+            className="p-1"
+            onClick={(e) => handleFilterChipClick(e, "operator")}
+            tabIndex={0}
+          >
+            {selectedOperator.label}
+          </div>
+        </>
+      )}
+      {selectedValue && (
+        <>
+          <Divider className="m-1" direction="vertical" />
+          <div
+            className="p-1"
+            onClick={(e) => handleFilterChipClick(e, "value")}
+            tabIndex={0}
+          >
             {Array.isArray(selectedValue)
               ? selectedValue?.map((item) => item.label).join(", ")
               : selectedValue?.label || selectedValue?.value}
@@ -44,15 +66,20 @@ const FilterChip = ({
       )}
       {onDelete && removable && (
         <>
-          <Divider direction="vertical" />
-          <FontAwesomeIcon
-            className="text-slate-500 cursor-pointer"
-            icon={faClose}
+          <Divider className="m-1" direction="vertical" />
+          <div
+            className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
             }}
-          />
+            tabIndex={0}
+          >
+            <FontAwesomeIcon
+              className="text-slate-400 hover:text-slate-600 transition-colors p-1"
+              icon={faClose}
+            />
+          </div>
         </>
       )}
     </div>

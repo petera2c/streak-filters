@@ -18,9 +18,15 @@ const FilterBuilder = () => {
     newFilters.splice(index, 1);
     setFilters(newFilters);
   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      const activeElement = document.activeElement as HTMLElement;
+      activeElement?.click();
+    }
+  };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" onKeyDown={handleKeyDown}>
       {filters.map((filter, index) => (
         <Filter
           editFilter={editFilter}
