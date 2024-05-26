@@ -13,11 +13,11 @@ type TableFilterValue =
     }
   | {
       label: string;
-      value: string[];
-    }
+      value: string;
+    }[]
   | {
       label: string;
-      value: number[];
-    };
+      value: number;
+    }[];
 
 export default TableFilterValue;

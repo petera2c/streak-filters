@@ -27,14 +27,20 @@ const Filter = ({
   const filterRef = useRef<HTMLDivElement>(null);
 
   // Local state
-  const [selectedColumn, setSelectedColumn] = useState<TableColumn>();
-  const [selectedOperator, setSelectedOperator] =
-    useState<TableFilterOperator>();
-  const [selectedValue, setSelectedValue] = useState<TableFilterValue>();
+  const [selectedColumn, setSelectedColumn] = useState<TableColumn | undefined>(
+    filter?.column
+  );
+  const [selectedOperator, setSelectedOperator] = useState<
+    TableFilterOperator | undefined
+  >(filter?.operator);
+  const [selectedValue, setSelectedValue] = useState<
+    TableFilterValue | undefined
+  >(filter?.value);
   const [open, setOpen] = useState(false);
   const [currentlyEditing, setCurrentlyEditing] = useState<
     "column" | "operator" | "value"
   >("column");
+  const [completeFilter, setCompleteFilter] = useState<boolean>(false);
 
   // Custom hooks
   useOnOutsideClick(filterRef, () => {
@@ -58,8 +64,10 @@ const Filter = ({
     setSelectedValue(undefined);
     setCurrentlyEditing("column");
     setOpen(false);
+    setCompleteFilter(false);
   };
-  const onEnter = () => {
+
+  const createFilter = () => {
     if (canEditFilter) {
       editFilter(index, {
         column: selectedColumn,
@@ -73,6 +81,11 @@ const Filter = ({
         value: selectedValue,
       });
       reset();
+    }
+  };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      createFilter();
     }
   };
   const onColumnChange = (value: TableColumn) => {
@@ -103,15 +116,21 @@ const Filter = ({
     if (
       selectedColumn &&
       selectedOperator &&
-      typeof selectedValue?.value === "boolean" &&
-      !filter
+      !Array.isArray(selectedValue) &&
+      typeof selectedValue === "boolean" &&
+      completeFilter
     ) {
-      // onEnter();
+      createFilter();
     }
   }, [filter, selectedColumn, selectedOperator, selectedValue]);
 
   return (
-    <div className="relative flex flex-col" ref={filterRef}>
+    <div
+      className="relative flex flex-col"
+      onKeyDown={onKeyDown}
+      ref={filterRef}
+      tabIndex={0}
+    >
       <FilterChip
         onClick={() => setOpen(true)}
         onDelete={() => index !== undefined && removeFilter?.(index)}
@@ -139,10 +158,10 @@ const Filter = ({
       )}
       {selectedColumn && selectedOperator && currentlyEditing === "value" && (
         <FilterSelectValue
-          onEnter={onEnter}
           open={open}
           selectedColumn={selectedColumn}
           selectedValue={selectedValue}
+          setCompleteFilter={setCompleteFilter}
           setOpen={setOpen}
           setSelectedValue={setSelectedValue}
         />

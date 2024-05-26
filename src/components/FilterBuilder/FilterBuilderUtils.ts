@@ -5,6 +5,7 @@ import {
   BOOLEAN_OPERATORS,
   ENUM_OPERATORS,
   DATE_OPERATORS,
+  RELATION_OPERATORS,
 } from "../../consts/Operators";
 
 export const getOperators = (column: TableColumn) => {
@@ -12,7 +13,7 @@ export const getOperators = (column: TableColumn) => {
     case "STRING":
       return STRING_OPERATORS;
     case "RELATION":
-      return STRING_OPERATORS;
+      return RELATION_OPERATORS;
     case "NUMBER":
       return NUMERIC_OPERATORS;
     case "DATE":

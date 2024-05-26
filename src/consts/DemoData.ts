@@ -29,11 +29,7 @@ export const DEMO_COLUMNS = [
     type: "STRING",
     label: "Billing zip",
   },
-  {
-    value: "created_at",
-    type: "TIMESTAMP",
-    label: "Created timestamp",
-  },
+
   {
     value: "duns",
     type: "STRING",
@@ -85,11 +81,7 @@ export const DEMO_COLUMNS = [
     type: "STRING",
     label: "Shipping zip",
   },
-  {
-    value: "updated_at",
-    type: "TIMESTAMP",
-    label: "Updated timestamp",
-  },
+
   {
     value: "website",
     type: "STRING",
@@ -123,17 +115,6 @@ export const DEMO_COLUMNS = [
       {
         value: "churned_from_free",
         label: "Churned from free",
-      },
-    ],
-  },
-  {
-    value: "owner_user",
-    type: "RELATION",
-    label: "Owner user",
-    relations: [
-      {
-        value: "{{current_user.id}}",
-        label: "Current User",
       },
     ],
   },

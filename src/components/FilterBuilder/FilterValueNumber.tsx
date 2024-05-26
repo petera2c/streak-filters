@@ -11,7 +11,11 @@ const FilterValueNumber = ({
   return (
     <Input
       autoFocus
-      onChange={(e) => onChange(Number(e.target.value))}
+      onChange={(e) => {
+        if (!isNaN(Number(e.target.value))) {
+          onChange(Number(e.target.value));
+        }
+      }}
       type="number"
       value={value !== undefined ? value : ""}
     />

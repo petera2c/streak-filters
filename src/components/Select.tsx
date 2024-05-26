@@ -12,7 +12,6 @@ const Select = ({
   mode = "default",
   options,
   onChange,
-  onEnter,
   open,
   setOpen,
   showSearch,
@@ -22,26 +21,48 @@ const Select = ({
   mode?: "multiple" | "default";
   options?: Option[];
   onChange?: (option: any) => void;
-  onEnter?: () => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   showSearch?: boolean;
   value?: Option | Option[];
 }) => {
+  // Refs
   const ref = useRef(null);
 
+  // Local state
   const [search, setSearch] = useState("");
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setOpen(false);
-      onEnter?.();
-    }
-  };
-
+  // Derived state
   const filteredOptions = options?.filter((option) => {
     return option.label.toLowerCase().includes(search.toLowerCase());
   });
+  const canSelectMultiple = mode === "multiple";
+
+  // Handlers
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setOpen(false);
+    }
+  };
+  const optionOnClick = ({
+    isSelected,
+    option,
+  }: {
+    isSelected: boolean;
+    option: Option;
+  }) => {
+    if (canSelectMultiple) {
+      if (Array.isArray(value)) {
+        if (isSelected) {
+          onChange?.(value.filter((v) => v.value !== option.value));
+        } else {
+          onChange?.(value.concat([option]));
+        }
+      } else {
+        onChange?.([option]);
+      }
+    } else onChange?.(option);
+  };
 
   return (
     <div
@@ -81,7 +102,7 @@ const Select = ({
                       isSelected ? "bg-blue-300" : "hover:bg-slate-300"
                     }`}
                     key={index}
-                    onClick={() => onChange?.(option)}
+                    onClick={() => optionOnClick({ isSelected, option })}
                   >
                     {option.label}
                   </div>

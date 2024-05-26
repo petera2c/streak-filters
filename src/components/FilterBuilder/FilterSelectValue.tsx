@@ -7,17 +7,17 @@ import FilterValueNumber from "./FilterValueNumber";
 import FilterValueInput from "./FilterValueString";
 
 const FilterSelectValue = ({
-  onEnter,
   open,
   selectedColumn,
   selectedValue,
+  setCompleteFilter,
   setOpen,
   setSelectedValue,
 }: {
-  onEnter: () => void;
   open: boolean;
   selectedColumn: TableColumn;
   selectedValue?: TableFilterValue;
+  setCompleteFilter: (completeFilter: boolean) => void;
   setOpen: (open: boolean) => void;
   setSelectedValue: (selectedValue: TableFilterValue) => void;
 }) => {
@@ -27,58 +27,59 @@ const FilterSelectValue = ({
       return (
         <Select
           mode="multiple"
-          onEnter={onEnter}
           open={open}
           options={selectedColumn.relations}
           setOpen={setOpen}
+          onChange={setSelectedValue}
           showSearch
+          value={selectedValue}
         />
       );
     case "STRING":
     case "NUMBER":
-      return (
-        <Select
-          dropdownRender={
-            <div className="flex flex-col gap-1">
-              <div className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto">
-                {selectedColumn.type === "STRING" && (
-                  <FilterValueInput
-                    onChange={(value) =>
-                      setSelectedValue({ label: value, value })
-                    }
-                    value={(selectedValue?.value || "") as string}
-                  />
-                )}
-                {selectedColumn.type === "NUMBER" && (
-                  <FilterValueNumber
-                    onChange={(value) =>
-                      setSelectedValue({ label: String(value), value })
-                    }
-                    value={selectedValue?.value as number}
-                  />
-                )}
+      if (!Array.isArray(selectedValue))
+        return (
+          <Select
+            dropdownRender={
+              <div className="flex flex-col gap-1">
+                <div className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto">
+                  {selectedColumn.type === "STRING" && (
+                    <FilterValueInput
+                      onChange={(value) =>
+                        setSelectedValue({ label: value, value })
+                      }
+                      value={(selectedValue?.value || "") as string}
+                    />
+                  )}
+                  {selectedColumn.type === "NUMBER" && (
+                    <FilterValueNumber
+                      onChange={(value) =>
+                        setSelectedValue({ label: String(value), value })
+                      }
+                      value={selectedValue?.value as number}
+                    />
+                  )}
+                </div>
+                <div className="text-xs text-slate-400">
+                  (Press enter to apply filter)
+                </div>
               </div>
-              <div className="text-xs text-slate-400">
-                (Press enter to apply filter)
-              </div>
-            </div>
-          }
-          onEnter={onEnter}
-          open={open}
-          setOpen={setOpen}
-        />
-      );
+            }
+            open={open}
+            setOpen={setOpen}
+          />
+        );
+      else return <></>;
     case "BOOLEAN":
       return (
         <Select
           onChange={(value) => {
             setSelectedValue(value);
-            // onEnter();
+            setCompleteFilter(true);
           }}
           open={open}
           options={BOOLEAN_VALUES}
           setOpen={setOpen}
-          onEnter={onEnter}
         />
       );
 

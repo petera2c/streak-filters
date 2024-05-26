@@ -35,7 +35,11 @@ const FilterChip = ({
       {selectedOperator && (
         <>
           <Divider direction="vertical" />
-          <div>{selectedValue?.label || selectedValue?.value}</div>
+          <div>
+            {Array.isArray(selectedValue)
+              ? selectedValue?.map((item) => item.label).join(", ")
+              : selectedValue?.label || selectedValue?.value}
+          </div>
         </>
       )}
       {onDelete && removable && (
