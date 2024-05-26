@@ -1,22 +1,25 @@
 import Input from "../Input";
 
 const FilterValueNumber = ({
+  createFilter,
   onChange,
   value,
 }: {
-  onChange: (value: number) => void;
-  value: number;
+  createFilter: () => void;
+  onChange: (value: string) => void;
+  value: string;
 }) => {
   return (
     <Input
       autoFocus
       onChange={(e) => {
         if (!isNaN(Number(e.target.value))) {
-          onChange(Number(e.target.value));
+          onChange(e.target.value);
         }
       }}
+      onEnter={createFilter}
       type="number"
-      value={value !== undefined ? value : ""}
+      value={value}
     />
   );
 };

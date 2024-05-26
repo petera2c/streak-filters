@@ -5,6 +5,8 @@ import TableFilter from "../../types/TableFilter";
 const FilterBuilder = () => {
   const [filters, setFilters] = useState<TableFilter[]>([]);
 
+  const defaultOpen = filters.length === 0;
+
   const addFilter = (filter: TableFilter) => {
     setFilters([...filters, filter]);
   };
@@ -29,6 +31,7 @@ const FilterBuilder = () => {
     <div className="flex flex-wrap gap-2" onKeyDown={handleKeyDown}>
       {filters.map((filter, index) => (
         <Filter
+          defaultOpen={defaultOpen}
           editFilter={editFilter}
           filter={filter}
           index={index}
@@ -36,7 +39,7 @@ const FilterBuilder = () => {
           removeFilter={removeFilter}
         />
       ))}
-      <Filter addFilter={addFilter} />
+      <Filter addFilter={addFilter} defaultOpen={defaultOpen} />
     </div>
   );
 };

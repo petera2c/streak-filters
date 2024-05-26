@@ -1,7 +1,18 @@
 import { InputHTMLAttributes } from "react";
 
-const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
-  return <input className="rounded px-2 py-1" {...props} />;
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  onEnter?: () => void;
+};
+
+const Input = ({ onEnter, ...props }: InputProps) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      onEnter?.();
+    }
+  };
+  return (
+    <input className="rounded px-2 py-1" onKeyDown={onKeyDown} {...props} />
+  );
 };
 
 export default Input;

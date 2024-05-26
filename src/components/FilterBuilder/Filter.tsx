@@ -13,12 +13,14 @@ import FilterEditingStage from "../../types/FilterEditingStage";
 
 const Filter = ({
   addFilter,
+  defaultOpen,
   editFilter,
   index,
   filter,
   removeFilter,
 }: {
   addFilter?: (filter: TableFilter) => void;
+  defaultOpen: boolean;
   editFilter?: (index: number, filter: TableFilter) => void;
   index?: number;
   filter?: TableFilter;
@@ -37,7 +39,7 @@ const Filter = ({
   const [selectedValue, setSelectedValue] = useState<
     TableFilterValue | undefined
   >(filter?.value);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [currentlyEditing, setCurrentlyEditing] =
     useState<FilterEditingStage>("column");
   const [completeFilter, setCompleteFilter] = useState<boolean>(false);
@@ -79,8 +81,9 @@ const Filter = ({
         operator: selectedOperator,
         value: selectedValue,
       });
-      setOpen(false);
     }
+    reset();
+    setOpen(false);
   }, [
     addFilter,
     canAddFilter,
@@ -91,11 +94,7 @@ const Filter = ({
     selectedOperator,
     selectedValue,
   ]);
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      createFilter();
-    }
-  };
+
   const onColumnChange = (value: TableColumn) => {
     setSelectedColumn(value);
     if (value.type === "BOOLEAN") {
@@ -107,7 +106,11 @@ const Filter = ({
   };
   const onOperatorChange = (value: TableFilterOperator) => {
     setSelectedOperator(value);
-    setCurrentlyEditing("value");
+    if (!selectedValue) {
+      setCurrentlyEditing("value");
+    } else {
+      setOpen(false);
+    }
   };
 
   // Initialize state from filter prop
@@ -116,19 +119,12 @@ const Filter = ({
       setSelectedColumn(filter.column);
       setSelectedOperator(filter.operator);
       setSelectedValue(filter.value);
-      setCurrentlyEditing("operator");
     }
   }, [filter]);
 
   // Create filter when complete
   useEffect(() => {
-    if (
-      selectedColumn &&
-      selectedOperator &&
-      !Array.isArray(selectedValue) &&
-      typeof selectedValue === "boolean" &&
-      completeFilter
-    ) {
+    if (selectedColumn && selectedOperator && selectedValue && completeFilter) {
       createFilter();
     }
   }, [
@@ -140,18 +136,14 @@ const Filter = ({
     selectedValue,
   ]);
 
-  useEffect(() => {
-    if (!open && !filter) {
-      reset();
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (!open && !filter) {
+  //     reset();
+  //   }
+  // }, [createFilter, open]);
 
   return (
-    <div
-      className="relative flex flex-col"
-      onKeyDown={onKeyDown}
-      ref={filterRef}
-    >
+    <div className="relative flex flex-col" ref={filterRef}>
       <FilterChip
         onClick={(editingStage: FilterEditingStage) => {
           setCurrentlyEditing(editingStage);
@@ -182,6 +174,7 @@ const Filter = ({
       )}
       {selectedColumn && selectedOperator && currentlyEditing === "value" && (
         <FilterSelectValue
+          createFilter={createFilter}
           open={open}
           selectedColumn={selectedColumn}
           selectedValue={selectedValue}

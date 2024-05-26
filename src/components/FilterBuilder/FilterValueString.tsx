@@ -1,14 +1,21 @@
 import Input from "../Input";
 
 const FilterValueInput = ({
-  value,
+  createFilter,
   onChange,
+  value,
 }: {
-  value: string;
+  createFilter: () => void;
   onChange: (value: string) => void;
+  value: string;
 }) => {
   return (
-    <Input autoFocus onChange={(e) => onChange(e.target.value)} value={value} />
+    <Input
+      autoFocus
+      onChange={(e) => onChange(e.target.value)}
+      onEnter={createFilter}
+      value={value}
+    />
   );
 };
 

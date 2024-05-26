@@ -6,6 +6,7 @@ import FilterValueNumber from "./FilterValueNumber";
 import FilterValueInput from "./FilterValueString";
 
 const FilterSelectValue = ({
+  createFilter,
   open,
   selectedColumn,
   selectedValue,
@@ -13,6 +14,7 @@ const FilterSelectValue = ({
   setOpen,
   setSelectedValue,
 }: {
+  createFilter: () => void;
   open: boolean;
   selectedColumn: TableColumn;
   selectedValue?: TableFilterValue;
@@ -24,15 +26,23 @@ const FilterSelectValue = ({
     case "RELATION":
     case "ENUM":
       return (
-        <Select
-          mode="multiple"
-          open={open}
-          options={selectedColumn.relations}
-          setOpen={setOpen}
-          onChange={setSelectedValue}
-          showSearch
-          value={selectedValue}
-        />
+        <div
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setCompleteFilter(true);
+            }
+          }}
+        >
+          <Select
+            mode="multiple"
+            open={open}
+            options={selectedColumn.relations}
+            setOpen={setOpen}
+            onChange={setSelectedValue}
+            showSearch
+            value={selectedValue}
+          />
+        </div>
       );
     case "STRING":
     case "NUMBER":
@@ -44,6 +54,7 @@ const FilterSelectValue = ({
                 <div className="bg-white border border-slate-300 border-solid rounded shadow-md overflow-auto">
                   {selectedColumn.type === "STRING" && (
                     <FilterValueInput
+                      createFilter={createFilter}
                       onChange={(value) =>
                         setSelectedValue({ label: value, value })
                       }
@@ -52,10 +63,11 @@ const FilterSelectValue = ({
                   )}
                   {selectedColumn.type === "NUMBER" && (
                     <FilterValueNumber
+                      createFilter={createFilter}
                       onChange={(value) =>
                         setSelectedValue({ label: String(value), value })
                       }
-                      value={selectedValue?.value as number}
+                      value={(selectedValue?.value || "") as string}
                     />
                   )}
                 </div>
@@ -71,15 +83,20 @@ const FilterSelectValue = ({
       else return <></>;
     case "BOOLEAN":
       return (
-        <Select
-          onChange={(value) => {
-            setSelectedValue(value);
-            setCompleteFilter(true);
+        <div
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setCompleteFilter(true);
+            }
           }}
-          open={open}
-          options={BOOLEAN_VALUES}
-          setOpen={setOpen}
-        />
+        >
+          <Select
+            onChange={setSelectedValue}
+            open={open}
+            options={BOOLEAN_VALUES}
+            setOpen={setOpen}
+          />
+        </div>
       );
 
     default:

@@ -1,5 +1,6 @@
 import { ReactNode, useRef, useState } from "react";
 import Input from "./Input";
+import Checkbox from "./Checkbox";
 
 type Option = {
   label: string;
@@ -90,14 +91,19 @@ const Select = ({
 
                   return (
                     <div
-                      className={`px-4 py-1 cursor-pointer transition ${
+                      className={`flex gap-2 px-4 py-1 cursor-pointer transition ${
                         isSelected ? "bg-blue-300" : "hover:bg-slate-300"
                       }`}
                       key={index}
                       onClick={() => optionOnClick({ isSelected, option })}
                       data-value={option.value}
-                      tabIndex={0}
                     >
+                      {canSelectMultiple && (
+                        <Checkbox
+                          onChange={() => optionOnClick({ isSelected, option })}
+                          value={isSelected}
+                        />
+                      )}
                       {option.label}
                     </div>
                   );
