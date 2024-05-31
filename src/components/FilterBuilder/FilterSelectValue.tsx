@@ -1,9 +1,14 @@
 import { BOOLEAN_VALUES } from "../../consts/FilterValues";
 import TableColumn from "../../types/TableColumn";
 import TableFilterValue from "../../types/TableFilterValue";
-import Select from "../Select/Select";
+import Select, { SelectWrapperProps } from "../Select/Select";
 import FilterValueNumberInput from "./FilterValueNumberInput";
 import FilterValueStringInput from "./FilterValueStringInput";
+
+const componentMap = {
+  STRING: FilterValueStringInput,
+  NUMBER: FilterValueNumberInput,
+};
 
 const FilterSelectValue = ({
   createFilter,
@@ -22,71 +27,51 @@ const FilterSelectValue = ({
   setOpen: (open: boolean) => void;
   setSelectedValue: (selectedValue: TableFilterValue) => void;
 }) => {
-  switch (selectedColumn.type) {
-    case "RELATION":
-    case "ENUM":
-      return (
-        <Select
-          mode="multiple"
-          onChange={setSelectedValue}
-          onEnter={() => setCompleteFilter(true)}
-          open={open}
-          options={selectedColumn.relations}
-          setOpen={setOpen}
-          showSearch
-          value={selectedValue}
-        />
-      );
-    case "STRING":
-    case "NUMBER":
-      if (!Array.isArray(selectedValue))
-        return (
-          <Select
-            descriptionText="(Press enter to apply filter)"
-            dropdownRender={
-              <>
-                {selectedColumn.type === "STRING" && (
-                  <FilterValueStringInput
-                    createFilter={createFilter}
-                    onChange={(value) =>
-                      setSelectedValue({ label: value, value })
-                    }
-                    value={(selectedValue?.value || "") as string}
-                  />
-                )}
-                {selectedColumn.type === "NUMBER" && (
-                  <FilterValueNumberInput
-                    createFilter={createFilter}
-                    onChange={(value) =>
-                      setSelectedValue({ label: String(value), value })
-                    }
-                    value={(selectedValue?.value || "") as string}
-                  />
-                )}
-              </>
-            }
-            open={open}
-            setOpen={setOpen}
-          />
-        );
-      else return <></>;
-    case "BOOLEAN":
-      return (
-        <Select
-          onChange={(value) => {
-            setSelectedValue(value);
-            setCompleteFilter(true);
-          }}
-          onEnter={() => setCompleteFilter(true)}
-          open={open}
-          options={BOOLEAN_VALUES}
-          setOpen={setOpen}
-        />
-      );
+  let selectProps: SelectWrapperProps = {
+    descriptionText: "(Press enter to apply filter)",
+    onChange: setSelectedValue,
+    onEnter: () => setCompleteFilter(true),
+    open,
+    setOpen,
+    showSearch: true,
+    value: selectedValue,
+  };
 
-    default:
-      return <>{selectedColumn.type}</>;
+  if (selectedColumn.type === "RELATION" || selectedColumn.type === "ENUM") {
+    selectProps = {
+      ...selectProps,
+      mode: "multiple",
+      options: selectedColumn.relations,
+    };
+  } else if (
+    selectedColumn.type === "STRING" ||
+    selectedColumn.type === "NUMBER"
+  ) {
+    const InputComponent = componentMap[selectedColumn.type];
+    if (!Array.isArray(selectedValue) && InputComponent) {
+      selectProps = {
+        ...selectProps,
+        dropdownRender: (
+          <InputComponent
+            createFilter={createFilter}
+            onChange={(value) => setSelectedValue({ label: value, value })}
+            value={(selectedValue?.value || "") as string}
+          />
+        ),
+      };
+    }
+  } else if (selectedColumn.type === "BOOLEAN") {
+    selectProps = {
+      ...selectProps,
+      options: BOOLEAN_VALUES,
+      onChange: (value) => {
+        setSelectedValue(value);
+        setCompleteFilter(true);
+      },
+    };
   }
+
+  return <Select {...selectProps} />;
 };
 
 export default FilterSelectValue;

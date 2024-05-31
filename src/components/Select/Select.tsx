@@ -17,7 +17,7 @@ type SelectProps = {
   value?: SelectOption | SelectOption[];
 };
 
-type SelectWrapperProps = SelectProps & {
+export type SelectWrapperProps = SelectProps & {
   open: boolean;
 };
 
